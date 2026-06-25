@@ -44,6 +44,17 @@ public class OrderService {
         }
         Order saveOrder = orderRepository.save(order);
 
+        for (ShoppingCartItem cartItem : cart.getItems().values())
+        {
+            OrderLineItem lineItem = new OrderLineItem();
+            lineItem.setOrderId(saveOrder.getOrderId());
+            lineItem.setProductId(cartItem.getProductId());
+            lineItem.setSalesPrice(cartItem.getProduct().getPrice());
+            lineItem.setQuantity(cartItem.getQuantity());
+            lineItem.setDiscount(cartItem.getDiscountPercent());
+            orderLineItemRepository.save(lineItem);
+        }
+
 
         shoppingCartService.clearCart(userId);
 
