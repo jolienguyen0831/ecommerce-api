@@ -1,8 +1,13 @@
 package org.yearup.service;
 
 import org.springframework.stereotype.Service;
+import org.yearup.models.CartItem;
+import org.yearup.models.Product;
 import org.yearup.models.ShoppingCart;
+import org.yearup.models.ShoppingCartItem;
 import org.yearup.repository.ShoppingCartRepository;
+
+import java.util.List;
 
 @Service
 public class ShoppingCartService
@@ -17,11 +22,47 @@ public class ShoppingCartService
         this.productService = productService;
     }
 
-    public ShoppingCart getByUserId(int userId)
-    {
+    public ShoppingCart getByUserId(int userId) {
         // load the user's cart rows, look up each product, and build the ShoppingCart
-        return null;
+        List<CartItem> cartItems = shoppingCartRepository.findByUserId(userId);
+        ShoppingCart shoppingCart = new ShoppingCart();
+        for (CartItem cartItem : cartItems) {
+            Product product = productService.getById(cartItem.getProductId());
+            ShoppingCartItem item = new ShoppingCartItem();
+            item.setProduct(product);
+            item.setQuantity(cartItem.getQuantity());
+            shoppingCart.add(item);
+        }
+        return shoppingCart;
     }
 
-    // add additional methods here
+    public ShoppingCart addProduct(int userId, int productId) {
+        CartItem existingCart = shoppingCartRepository.findByUserIdAndProductId(userId, productId);
+        if (existingCart == null) {
+            CartItem newItem = new CartItem();
+            newItem.setUserId(userId);
+            newItem.setProductId(productId);
+            newItem.setQuantity(1);
+            shoppingCartRepository.save(newItem);
+        } else {
+            existingCart.setQuantity(existingCart.getQuantity() + 1);
+            shoppingCartRepository.save(existingCart);
+        }
+        return getByUserId(userId);
+    }
+
+    public ShoppingCart updateProduct(int userId, int productId, int quantity) {
+        CartItem existingCart = shoppingCartRepository.findByUserIdAndProductId(userId, productId);
+        if (existingCart != null) {
+            existingCart.setQuantity(quantity);
+            shoppingCartRepository.save(existingCart);
+        }
+        return getByUserId(userId);
+    }
+
+    public ShoppingCart clearCart(int userId) {
+        shoppingCartRepository.deleteByUserId(userId);
+        return getByUserId(userId);
+    }
 }
+
