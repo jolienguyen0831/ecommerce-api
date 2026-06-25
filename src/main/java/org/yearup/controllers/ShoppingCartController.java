@@ -35,7 +35,7 @@ public class ShoppingCartController
         // get the currently logged in username
         String userName = principal.getName();
         // find database user by username
-        User user = userService.getByUserName(userName);
+        User user = userService.getUserByUserName(userName);
         int userId = user.getId();
 
         // use the shoppingCartService to get all items in the cart and return the cart
@@ -49,7 +49,7 @@ public class ShoppingCartController
     @PostMapping("products/{productId}")
     public ResponseEntity<ShoppingCart> addProduct(@PathVariable int productId, Principal principal){
         String username = principal.getName();
-        User user = userService.getByUserName(username);
+        User user = userService.getUserByUserName(username);
         ShoppingCart cart = shoppingCartService.addProduct(user.getId(), productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(cart);
 
@@ -62,7 +62,7 @@ public class ShoppingCartController
     @PutMapping("products/{productId}")
     public ShoppingCart updateProduct(@PathVariable int productId, @RequestBody ShoppingCartItem item,Principal principal){
         String username = principal.getName();
-        User user = userService.getByUserName(username);
+        User user = userService.getUserByUserName(username);
         return shoppingCartService.updateProduct(user.getId(),productId, item.getQuantity());
     }
 
@@ -72,7 +72,7 @@ public class ShoppingCartController
     @DeleteMapping
     public ShoppingCart clearCart(Principal principal){
         String username = principal.getName();
-        User user = userService.getByUserName(username);
+        User user = userService.getUserByUserName(username);
         return shoppingCartService.clearCart(user.getId());
     }
 

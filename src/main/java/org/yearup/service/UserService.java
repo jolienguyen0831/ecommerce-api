@@ -27,14 +27,14 @@ public class UserService
         return userRepository.findById(userId).orElse(null);
     }
 
-    public User getByUserName(String username)
+    public User getUserByUserName(String username)
     {
-        return userRepository.findByUsername(username);
+        return userRepository.findUserByUsername(username);
     }
 
     public int getIdByUsername(String username)
     {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findUserByUsername(username);
         return user != null ? user.getId() : -1;
     }
 
