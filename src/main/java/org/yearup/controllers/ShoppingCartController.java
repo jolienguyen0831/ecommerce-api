@@ -35,7 +35,7 @@ public class ShoppingCartController
         // get the currently logged in username
         String userName = principal.getName();
         // find database user by username
-        User user = userService.getByUserName(userName);
+        User user = userService.getUserByUserName(userName);
         int userId = user.getId();
 
         // use the shoppingCartService to get all items in the cart and return the cart
