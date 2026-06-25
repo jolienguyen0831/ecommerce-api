@@ -52,7 +52,7 @@ public class AuthenticationController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = tokenProvider.createToken(authentication, false);
 
-            User user = userService.getByUserName(loginDto.getUsername());
+            User user = userService.getUserByUserName(loginDto.getUsername());
 
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
