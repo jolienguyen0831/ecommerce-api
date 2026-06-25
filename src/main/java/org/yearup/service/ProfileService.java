@@ -19,7 +19,7 @@ public class ProfileService
         return profileRepository.save(profile);
     }
 
-    public Profile getByUserId(int userId)
+    public Profile getProfileByUserId(int userId)
     {
         return profileRepository.findProfileByUserId(userId);
     }
