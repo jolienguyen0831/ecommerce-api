@@ -1,11 +1,12 @@
 package org.yearup.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.yearup.models.Order;
-import org.yearup.models.Product;
-import org.yearup.models.Profile;
+import org.yearup.models.*;
 import org.yearup.repository.OrderLineItemRepository;
 import org.yearup.repository.OrderRepository;
+
+import java.time.LocalDateTime;
 
 @Service
 public class OrderService {
@@ -21,8 +22,27 @@ public class OrderService {
         this.profileService = profileService;
     }
 
+    @Transactional
     public Order checkout(int userId){
-        Profile profile = profileService.get
+        Profile profile = profileService.getProfileByUserId(userId);
+        ShoppingCart cart = shoppingCartService.getByUserId(userId);
+
+        Order order = new Order();
+        order.setUserId(userId);
+        order.setDate(LocalDateTime.now());
+        order.setShippingAmount(5.95);
+        if(profile!=null){
+            order.setAddress(profile.getAddress());
+            order.setCity(profile.getCity());
+            order.setState(profile.getState());
+            order.setZip(profile.getZip());
+        }
+        Order saveOrder = orderRepository.save(order);
+
+
+        shoppingCartService.clearCart(userId);
+
+        return saveOrder;
     }
 
 

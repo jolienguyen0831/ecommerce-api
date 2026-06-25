@@ -11,7 +11,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name ="order_id")
-    private int orderId;
+    private Integer orderId;
 
     @Column(name ="user_id")
     private int userId;
@@ -83,11 +83,11 @@ public class Order {
         this.userId = userId;
     }
 
-    public int getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 }
